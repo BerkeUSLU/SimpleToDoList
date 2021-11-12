@@ -1,42 +1,46 @@
 package view;
 
+import controller.KeyPressListener;
 import controller.SaveButtonAction;
-import model.ToDo;
 import model.ToDoListModel;
 import model.TodoModelListener;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class ToDoPanel extends JPanel implements TodoModelListener {
     private final String ADD_TOTO = "Save";
-    private JTextField title;
-    private JButton saveButton;
+    private final JTextField todoItemTextField;
+    private final JButton saveButton;
+    private final JTable todoListTable;
 
-    //private JLabel label = new JLabel();
-
-    private JTable todoTable;
-
-    ToDoListModel model;
+    private final ToDoListModel model;
 
     public ToDoPanel(ToDoListModel model) {
         this.model = model;
 
-        title = new JTextField();
+        todoItemTextField = new JTextField();
+        todoItemTextField.setPreferredSize(new Dimension(600, 50));
         saveButton = new JButton(ADD_TOTO);
+        //saveButton.setPreferredSize(new Dimension(400,50));
         saveButton.addActionListener(new SaveButtonAction(model, this));
-        todoTable = new JTable(new TodoTableModel(model));
+
+        todoListTable = new JTable(new TodoTableModel(model));
+        todoListTable.setPreferredScrollableViewportSize(new Dimension(600, 500));
+        JScrollPane scrollPane = new JScrollPane(todoListTable);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         model.addListener(this);
+        todoItemTextField.addKeyListener(new KeyPressListener(model, this));
 
-        add(title);
+        add(todoItemTextField);
         add(saveButton);
-        add(todoTable);
-        //add(label);
+        add(scrollPane);
 
     }
 
     public JTextField getTitleTextField() {
-        return title;
+        return todoItemTextField;
     }
 
     @Override

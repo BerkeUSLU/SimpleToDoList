@@ -22,6 +22,10 @@ public class SaveButtonAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         String title = view.getTitleTextField().getText();
+        if(title.isEmpty()) {
+            return;
+        }
+
         ToDo td = new ToDo(title);
         model.addTodo(td);
 
